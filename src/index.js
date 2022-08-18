@@ -8,7 +8,7 @@ import { ContextProvider } from "./context/Context.js";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <ContextProvider>
-    <Router>
+    <Router basename={process.env.PUBLIC_URL}>
       <App />
     </Router>
   </ContextProvider>
