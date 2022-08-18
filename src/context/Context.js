@@ -5,6 +5,7 @@ const Context = React.createContext();
 function ContextProvider({ children }) {
   const [allPhotos, setAllPhotos] = useState([]);
   const [cartItems, setCartItems] = useState([]);
+  const [orderStatus, setOrderStatus ] = useState(false);
 
   useEffect(() => {
     axios
@@ -43,6 +44,8 @@ function ContextProvider({ children }) {
         setCartItems,
         addImageToCart,
         removeImageFromCart,
+        orderStatus,
+        setOrderStatus,
       }}
     >
       {children}

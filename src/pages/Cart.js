@@ -1,9 +1,12 @@
-import React, { useContext } from "react";
+import React, {useState, useContext, useRef } from "react";
 import { Context } from "../context/Context";
 import CartItem from "../components/CartItem";
+import Confetti from "../components/Confetti";
 
 function Cart() {
-  const { cartItems, setCartItems } = useContext(Context);
+  const { cartItems, setCartItems, orderStatus, setOrderStatus } =
+    useContext(Context);
+
   const totalCost = 5.99 * cartItems.length;
   const totalCostDisplay = totalCost.toLocaleString("en-US", {
     style: "currency",
@@ -14,24 +17,33 @@ function Cart() {
     <CartItem key={item.id} item={item} />
   ));
 
-  function placeOrder(event){
-     event.target.textContent = "Ordering..."
+  const cartHeading = useRef();
+  
+  function placeOrder(){
+    cartHeading.current.textContent = "Ordering....";
      setTimeout(()=>{
-          event.target.textContent = "Order Succesfully Placed";
-          setTimeout(()=>{
-             setCartItems([]);
-          },3000)     
+       cartHeading.current.textContent = "Order Succesfully Placed";
+       setCartItems([]);  
+       setOrderStatus(true);
+        
+       setTimeout(()=>{
+        setOrderStatus(false);
+       }, 15000)
+
      },3000)  
   }
 
   return (
     <main className="cart-page">
-      <h1>Check out</h1>
+      {orderStatus && <Confetti/>}
+      <h1 ref={cartHeading}>Check out</h1>
       {cartItemElements}
-      <p className="total-cost">Total: {totalCostDisplay}</p>
-      {cartItems.length > 0 && <div className="order-button">
-        <button onClick={placeOrder}>Place Order</button>
-      </div>}
+      {orderStatus === false && <p className="total-cost">Total: {totalCostDisplay}</p>}
+      {cartItems.length > 0 && (
+        <div className="order-button">
+          <button onClick={placeOrder}>Place Order</button>
+        </div>
+      )}
     </main>
   );
 }
